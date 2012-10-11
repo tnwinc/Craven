@@ -99,16 +99,21 @@ section {
 }
 
 #statements > div > div {
-  padding-left: 20px;
+  margin-left: 20px;
   position: relative;
 }
 
-#statements > div > div:before {
-  content: '>  ';
+#statements > div > div::before {
+  content: '>';
   text-align: top;
   position: absolute;
-  left: 0px;
+  left: -20px;
   top: -1px;
+  outline: none !important;
+}
+#statements > div > div:focus::before {
+  outline: none !important;
+  content: '> ';
 }
 
 #statements .sql {
