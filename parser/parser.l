@@ -1,12 +1,11 @@
 %%
 \s+     /* skip whitespace */
 
-"SELECT"       return 'SELECT'
-"WHERE"        return 'WHERE'
+[Ss][Ee][Ll][Ee][Cc][Tt]      return 'SELECT'
+[Ww][Hh][Ee][Rr][Ee]        return 'WHERE'
+[Ff][Rr][Oo][Mm]         return 'FROM'
+[Aa][Nn][Dd]          return 'AND'
 "*"            return 'ALLPROPERTIES'
-"FROM"         return 'FROM'
-"AND"          return 'AND'
-"IS UNDEFINED" return 'ISUNDEFINED'
 ","            return ','
 [a-zA-Z_-]+    return 'IDENTIFIER'
 \d+            return 'NUMBER'

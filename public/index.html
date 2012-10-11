@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Craven</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/craven.css" rel="stylesheet" />
+  </head>
+  <body>
+    <hgroup>
+      <header>Craven</header>
+      <p>Learn how to transform your SQL knowledge into HTTP Api calls to a Raven Database.</p>
+      <!--<ul class="nav">-->
+        <!--<li><a href="https://github.com/tnwinc/Craven" target="_blank">GitHub</a></li>-->
+        <!--<li><a href="http://ravendb.net/" target="_blank">RavenDB</a></li>-->
+      <!--</ul>-->
+    </hgroup>
+
+    <section id="configuration">
+      <div>
+        <label>RavenDB Url:</label>
+        <input id="ravenUrl" placeholder="http://localhost:8080" />
+      </div>
+
+      <div>
+        <label>Database:</label>
+        <input id="database" placeholder="default" />
+      </div>
+
+      <div>
+        <label>Index:</label>
+        <input id="index" placeholder="dynamic" />
+      </div>
+    </section>
+
+    <section id="statements">
+      <div>
+        <div class="sql" contenteditable></div>
+        <div class="curl"></div>
+      </div>
+    </section>
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/transformer.js"></script>
+    <script>
+      function transform_statement(source){
+        var ravenDBUrl = $('#ravenUrl').val() || 'http://localhost:8080';
+        var database = $('#database').val();
+        var out = $(this).next('.curl');
+
+        database = database.length?database:undefined;
+
+        try {
+          var transformed = transformer.transform($(this).text(), ravenDBUrl, database);
+        } catch (ex){
+          out.text('');
+          return;
+        }
+
+        var curl_statement = 'curl ';
+        curl_statement += '-X GET ';
+        curl_statement += transformed.url;
+
+        out.text(curl_statement)
+
+      }
+      $(function(){
+        $('#configuration input')
+        .on('change keyup', function(){
+          $('.sql').each(transform_statement);
+        });
+        $('.sql')
+          .on('keyup', transform_statement)
+      });
+    </script>
+  </body>
+</html>
