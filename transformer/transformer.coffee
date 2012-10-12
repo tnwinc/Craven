@@ -17,10 +17,10 @@ exports.transform = (sql, ravenUrl, database, index)->
   request = {}
 
   if statement.type is 'SELECT'
+    request.method = 'GET'
+
     request.url = "#{ravenUrl}/#{database}indexes/dynamic/#{statement.collection}"
-
     params = []
-
     if statement.filters?.length
       filters = []
       for filter in statement.filters

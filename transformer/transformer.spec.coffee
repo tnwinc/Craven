@@ -17,6 +17,10 @@ describe 'Transforming SQL-like statements into HTTP requests', ->
       request = transformer.transform("Select * fRom People", 'http://ravendb')
       (expect request.url).to.equal "http://ravendb/indexes/dynamic/People"
 
+    it 'should set the method to GET', ->
+      request = transformer.transform("Select * From People", 'http://ravendb')
+      (expect request.method).to.equal 'GET'
+
     describe 'with Where clauses', ->
 
       describe 'single, numeric where clause', ->
