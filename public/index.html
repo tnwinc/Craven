@@ -9,11 +9,15 @@
     <hgroup>
       <header>Craven</header>
       <p>Learn how to transform your SQL knowledge into HTTP Api calls to a Raven Database.</p>
-      <!--<ul class="nav">-->
-        <!--<li><a href="https://github.com/tnwinc/Craven" target="_blank">GitHub</a></li>-->
-        <!--<li><a href="http://ravendb.net/" target="_blank">RavenDB</a></li>-->
-      <!--</ul>-->
     </hgroup>
+
+    <section id="help">
+      <p>
+      Enter your SQL statement and any configuration information below.<br />
+      Once you have entered a SQL statement that we understand, the equivalent curl
+      commandline statement will be shown below.
+      </p>
+    </section>
 
     <section id="configuration">
       <div>
@@ -27,8 +31,8 @@
       </div>
 
       <div>
-        <label>Index:</label>
-        <input id="index" placeholder="dynamic" />
+        <!--<label>Index:</label>-->
+        <!--<input id="index" placeholder="dynamic" />-->
       </div>
     </section>
 
@@ -39,8 +43,18 @@
       </div>
     </section>
 
+    <footer>
+      <p>The Network, Inc</p>
+      <ul>
+        <li><a href="http://ravendb.net/" target="_blank">RavenDB</a></li>
+        <li><a href="http://curl.haxx.se/download.html" target="_blank">Curl</a></li>
+        <li><a href="https://github.com/tnwinc/Craven" target="_blank">Craven on GitHub</a></li>
+        <li><a href="https://github.com/tnwinc/Craven/issues" target="_blank">Report Issues</a></li>
+        <li><a href="http://labs.tnwinc.com" target="_blank">TNW DevLabs</a></li>
+      </ul>
+    </footer>
+
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script src="js/transformer.js"></script>
     <script>
       function transform_statement(source){
@@ -71,6 +85,7 @@
         });
         $('.sql')
           .on('keyup', transform_statement)
+          .first().focus();
       });
     </script>
   </body>
