@@ -83,7 +83,7 @@ window.transformer = (function (modules) {
 				  urlRegex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
 				  exports.transform = function(sql, ravenUrl, database, index) {
-				    var filter, filters, params, property, request, statement, _i, _j, _len, _len2, _ref, _ref2, _ref3, _ref4, _ref5;
+				    var filter, filters, logicalOperator, params, property, request, statement, _i, _j, _len, _len2, _ref, _ref2, _ref3, _ref4, _ref5;
 				    if (!(ravenUrl != null ? ravenUrl.length : void 0)) {
 				      throw Error('ravenUrl must be defined');
 				    }
@@ -94,6 +94,7 @@ window.transformer = (function (modules) {
 				    statement = parser.parse(sql);
 				    request = {};
 				    if (statement.type === 'SELECT') {
+				      request.method = 'GET';
 				      request.url = "" + ravenUrl + "/" + database + "indexes/dynamic/" + statement.collection;
 				      params = [];
 				      if ((_ref = statement.filters) != null ? _ref.length : void 0) {
@@ -102,9 +103,10 @@ window.transformer = (function (modules) {
 				        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
 				          filter = _ref2[_i];
 				          filter.value = ((_ref3 = filter.value) != null ? typeof _ref3.match === "function" ? _ref3.match(singleQuotedStringPattern) : void 0 : void 0) ? filter.value.replace(singleQuotedStringPattern, '"$1"') : filter.value;
-				          filters.push("" + filter.key + ":" + filter.value);
+				          logicalOperator = filter.logicalOperator ? "" + filter.logicalOperator + " " : '';
+				          filters.push("" + logicalOperator + filter.key + ":" + filter.value);
 				        }
-				        params.push("query=" + (filters.join(' AND ')));
+				        params.push("query=" + (filters.join(' ')));
 				      }
 				      if ((_ref4 = statement.properties) != null ? _ref4.length : void 0) {
 				        _ref5 = statement.properties;
@@ -145,9 +147,9 @@ window.transformer = (function (modules) {
 			var parser = (function(){
 			var parser = {trace: function trace() { },
 			yy: {},
-			symbols_: {"error":2,"SQLStatement":3,"OPERATION":4,"EOF":5,"CRUDOPERATION":6,"WHERESTATEMENT":7,"SELECT":8,"PROPERTIES":9,"FROM":10,"IDENTIFIER":11,"ALLPROPERTIES":12,"IDENTIFIERLIST":13,",":14,"WHERE":15,"WHERECLAUSELIST":16,"WHERECLAUSE":17,"AND":18,"OP":19,"VALUE":20,"NUMBER":21,"STRING":22,"$accept":0,"$end":1},
-			terminals_: {2:"error",5:"EOF",8:"SELECT",10:"FROM",11:"IDENTIFIER",12:"ALLPROPERTIES",14:",",15:"WHERE",18:"AND",19:"OP",21:"NUMBER",22:"STRING"},
-			productions_: [0,[3,2],[4,1],[4,2],[6,4],[9,1],[9,1],[13,1],[13,3],[7,2],[16,1],[16,3],[17,3],[20,1],[20,1]],
+			symbols_: {"error":2,"SQLStatement":3,"OPERATION":4,"EOF":5,"CRUDOPERATION":6,"WHERESTATEMENT":7,"SELECT":8,"PROPERTIES":9,"FROM":10,"IDENTIFIER":11,"ALLPROPERTIES":12,"IDENTIFIERLIST":13,",":14,"WHERE":15,"WHERECLAUSELIST":16,"WHERECLAUSE":17,"AND":18,"OR":19,"OP":20,"VALUE":21,"NUMBER":22,"STRING":23,"$accept":0,"$end":1},
+			terminals_: {2:"error",5:"EOF",8:"SELECT",10:"FROM",11:"IDENTIFIER",12:"ALLPROPERTIES",14:",",15:"WHERE",18:"AND",19:"OR",20:"OP",22:"NUMBER",23:"STRING"},
+			productions_: [0,[3,2],[4,1],[4,2],[6,4],[9,1],[9,1],[13,1],[13,3],[7,2],[16,1],[16,3],[16,3],[17,3],[21,1],[21,1]],
 			performAction: function anonymous(yytext,yyleng,yylineno,yy,yystate,$$,_$) {
 
 			var $0 = $$.length - 1;
@@ -172,17 +174,19 @@ window.transformer = (function (modules) {
 			break;
 			case 10: this.$ = [$$[$0]]; 
 			break;
-			case 11: this.$ = $$[$0-2]; $$[$0-2].push($$[$0]); 
+			case 11: this.$ = $$[$0-2]; $$[$0].logicalOperator = 'AND'; $$[$0-2].push($$[$0]); 
 			break;
-			case 12: this.$ = {key: $$[$0-2], operator: $$[$0-1], value: $$[$0]}; 
+			case 12: this.$ = $$[$0-2]; $$[$0].logicalOperator = 'OR'; $$[$0-2].push($$[$0]); 
 			break;
-			case 13: this.$ = $$[$0]; 
+			case 13: this.$ = {key: $$[$0-2], operator: $$[$0-1], value: $$[$0]}; 
 			break;
 			case 14: this.$ = $$[$0]; 
 			break;
+			case 15: this.$ = $$[$0]; 
+			break;
 			}
 			},
-			table: [{3:1,4:2,6:3,8:[1,4]},{1:[3]},{5:[1,5]},{5:[2,2],7:6,15:[1,7]},{9:8,11:[1,11],12:[1,9],13:10},{1:[2,1]},{5:[2,3]},{11:[1,14],16:12,17:13},{10:[1,15]},{10:[2,5]},{10:[2,6],14:[1,16]},{10:[2,7],14:[2,7]},{5:[2,9],18:[1,17]},{5:[2,10],18:[2,10]},{19:[1,18]},{11:[1,19]},{11:[1,20]},{11:[1,14],17:21},{20:22,21:[1,23],22:[1,24]},{5:[2,4],15:[2,4]},{10:[2,8],14:[2,8]},{5:[2,11],18:[2,11]},{5:[2,12],18:[2,12]},{5:[2,13],18:[2,13]},{5:[2,14],18:[2,14]}],
+			table: [{3:1,4:2,6:3,8:[1,4]},{1:[3]},{5:[1,5]},{5:[2,2],7:6,15:[1,7]},{9:8,11:[1,11],12:[1,9],13:10},{1:[2,1]},{5:[2,3]},{11:[1,14],16:12,17:13},{10:[1,15]},{10:[2,5]},{10:[2,6],14:[1,16]},{10:[2,7],14:[2,7]},{5:[2,9],18:[1,17],19:[1,18]},{5:[2,10],18:[2,10],19:[2,10]},{20:[1,19]},{11:[1,20]},{11:[1,21]},{11:[1,14],17:22},{11:[1,14],17:23},{21:24,22:[1,25],23:[1,26]},{5:[2,4],15:[2,4]},{10:[2,8],14:[2,8]},{5:[2,11],18:[2,11],19:[2,11]},{5:[2,12],18:[2,12],19:[2,12]},{5:[2,13],18:[2,13],19:[2,13]},{5:[2,14],18:[2,14],19:[2,14]},{5:[2,15],18:[2,15],19:[2,15]}],
 			defaultActions: {5:[2,1],6:[2,3],9:[2,5]},
 			parseError: function parseError(str, hash) {
 			    throw new Error(str);
@@ -474,26 +478,28 @@ window.transformer = (function (modules) {
 			break;
 			case 4:return 18
 			break;
-			case 5:return 12
+			case 5:return 19
 			break;
-			case 6:return 14
+			case 6:return 12
 			break;
-			case 7:return 11
+			case 7:return 14
 			break;
-			case 8:return 21
+			case 8:return 11
 			break;
 			case 9:return 22
 			break;
-			case 10:return 22
+			case 10:return 23
 			break;
-			case 11:return 19
+			case 11:return 23
 			break;
-			case 12:return 5
+			case 12:return 20
+			break;
+			case 13:return 5
 			break;
 			}
 			};
-			lexer.rules = [/^(?:\s+)/,/^(?:[Ss][Ee][Ll][Ee][Cc][Tt])/,/^(?:[Ww][Hh][Ee][Rr][Ee])/,/^(?:[Ff][Rr][Oo][Mm])/,/^(?:[Aa][Nn][Dd])/,/^(?:\*)/,/^(?:,)/,/^(?:[a-zA-Z_-]+)/,/^(?:\d+)/,/^(?:['].*?['])/,/^(?:["].*?["])/,/^(?:[><=])/,/^(?:$)/];
-			lexer.conditions = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12],"inclusive":true}};
+			lexer.rules = [/^(?:\s+)/,/^(?:[Ss][Ee][Ll][Ee][Cc][Tt])/,/^(?:[Ww][Hh][Ee][Rr][Ee])/,/^(?:[Ff][Rr][Oo][Mm])/,/^(?:[Aa][Nn][Dd])/,/^(?:[Oo][Rr])/,/^(?:\*)/,/^(?:,)/,/^(?:[a-zA-Z_-]+)/,/^(?:\d+)/,/^(?:['].*?['])/,/^(?:["].*?["])/,/^(?:[><=])/,/^(?:$)/];
+			lexer.conditions = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13],"inclusive":true}};
 			return lexer;})()
 			parser.lexer = lexer;
 			function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Parser;

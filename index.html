@@ -72,7 +72,7 @@
         }
 
         var curl_statement = 'curl ';
-        curl_statement += '-X GET ';
+        curl_statement += '-X ' + transformed.method + ' ';
         curl_statement += transformed.url;
 
         out.text(curl_statement)
