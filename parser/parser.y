@@ -15,7 +15,7 @@ OPERATION
   ;
 
 CRUDOPERATION
-  : SELECT PROPERTIES FROM IDENTIFIER
+  : SELECT PROPERTIES FROM COLLECTION
     { $$ = {type: 'SELECT', properties: $2, collection: $4}; }
   ;
 
@@ -24,6 +24,18 @@ PROPERTIES
     { $$ = null; }
   | IDENTIFIERLIST
     { $$ = $1; }
+  ;
+
+COLLECTION
+  : BASICIDENTIFIER
+    { $$ = $1; }
+  ;
+
+IDENTIFIER
+  : BASICIDENTIFIER
+    { $$ = $1; }
+  | COMPLEXIDENTIFIER
+    { $$ = $1.replace('[', '').replace(']', ''); }
   ;
 
 IDENTIFIERLIST

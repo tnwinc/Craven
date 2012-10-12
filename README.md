@@ -18,4 +18,8 @@ SELECT * FROM SomeCollection WHERE OneField=2 AND (SomeField='some_val' OR Anoth
 
 // Specifying fields to show in the results
 SELECT Id,Name,Dob FROM SomeCollection WHERE SomeField="some_val"
+
+// Using Nested Fields
+SELECT Id,[Parent.Id],Dob FROM SomeCollection WHERE [Nested.Property]="some_val"
+SELECT Id,[List,Property],Dob FROM SomeCollection WHERE [List,AnotherProperty]="some_val"
 ```
