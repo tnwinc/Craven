@@ -25,8 +25,9 @@ exports.transform = (sql, ravenUrl, database, index)->
       filters = []
       for filter in statement.filters
         filter.value = if filter.value?.match? singleQuotedStringPattern then filter.value.replace singleQuotedStringPattern, '"$1"' else filter.value
-        filters.push "#{filter.key}:#{filter.value}"
-      params.push "query=#{filters.join ' AND '}"
+        logicalOperator = if filter.logicalOperator then "#{filter.logicalOperator} " else ''
+        filters.push "#{logicalOperator}#{filter.key}:#{filter.value}"
+      params.push "query=#{filters.join ' '}"
 
     if statement.properties?.length
       params.push "fetch=#{property}" for property in statement.properties

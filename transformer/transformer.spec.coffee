@@ -43,6 +43,11 @@ describe 'Transforming SQL-like statements into HTTP requests', ->
           request = transformer.transform("SELECT * FROM People WHERE Name = 'Bill' AND Id = 20", 'http://ravendb')
           (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:"Bill" AND Id:20'
 
+      describe 'multiple where clauses joined by Or', ->
+        it 'should build the right query', ->
+          request = transformer.transform("SELECT * FROM People WHERE Name = 'Bill' OR Id = 20", 'http://ravendb')
+          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:"Bill" OR Id:20'
+
     describe 'with a database selected', ->
       it 'should insert the build the right query', ->
         request = transformer.transform("SELECT * FROM People", 'http://ravendb/', 'db1')

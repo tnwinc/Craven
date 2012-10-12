@@ -10,5 +10,7 @@ So far, only pretty basic SQL Select statements are supported. Examples of the s
 ```
 SELECT * FROM SomeCollection WHERE SomeField='some_val' AND AnotherField='another_val'
 
-SELECT Id,Name,Dob FROM SomeCollection WHERE SomeField='some_val'
+SELECT * FROM SomeCollection WHERE SomeField='some_val' OR AnotherField='another_val'
+
+SELECT Id,Name,Dob FROM SomeCollection WHERE SomeField="some_val"
 ```

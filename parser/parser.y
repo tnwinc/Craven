@@ -42,7 +42,9 @@ WHERECLAUSELIST
   : WHERECLAUSE
     { $$ = [$1]; }
   | WHERECLAUSELIST AND WHERECLAUSE
-    { $$ = $1; $1.push($3); }
+    { $$ = $1; $3.logicalOperator = 'AND'; $1.push($3); }
+  | WHERECLAUSELIST OR WHERECLAUSE
+    { $$ = $1; $3.logicalOperator = 'OR'; $1.push($3); }
   ;
 
 WHERECLAUSE
