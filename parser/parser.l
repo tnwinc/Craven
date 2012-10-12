@@ -10,6 +10,7 @@
 [a-zA-Z_-]+    return 'IDENTIFIER'
 \d+            return 'NUMBER'
 ['].*?[']      return 'STRING'
+["].*?["]      return 'STRING'
 [><=]          return 'OP'
 
 <<EOF>>        return 'EOF'
