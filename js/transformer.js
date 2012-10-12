@@ -156,9 +156,9 @@ window.transformer = (function (modules) {
 			var parser = (function(){
 			var parser = {trace: function trace() { },
 			yy: {},
-			symbols_: {"error":2,"SQLStatement":3,"OPERATION":4,"EOF":5,"CRUDOPERATION":6,"WHERESTATEMENT":7,"SELECT":8,"PROPERTIES":9,"FROM":10,"IDENTIFIER":11,"ALLPROPERTIES":12,"IDENTIFIERLIST":13,",":14,"WHERE":15,"WHERECLAUSELIST":16,"WHERECLAUSE":17,"AND":18,"OR":19,"OP":20,"VALUE":21,"OPENGROUP":22,"CLOSEGROUP":23,"NUMBER":24,"STRING":25,"$accept":0,"$end":1},
-			terminals_: {2:"error",5:"EOF",8:"SELECT",10:"FROM",11:"IDENTIFIER",12:"ALLPROPERTIES",14:",",15:"WHERE",18:"AND",19:"OR",20:"OP",22:"OPENGROUP",23:"CLOSEGROUP",24:"NUMBER",25:"STRING"},
-			productions_: [0,[3,2],[4,1],[4,2],[6,4],[9,1],[9,1],[13,1],[13,3],[7,2],[16,1],[16,3],[16,3],[17,3],[17,3],[21,1],[21,1]],
+			symbols_: {"error":2,"SQLStatement":3,"OPERATION":4,"EOF":5,"CRUDOPERATION":6,"WHERESTATEMENT":7,"SELECT":8,"PROPERTIES":9,"FROM":10,"COLLECTION":11,"ALLPROPERTIES":12,"IDENTIFIERLIST":13,"BASICIDENTIFIER":14,"IDENTIFIER":15,"COMPLEXIDENTIFIER":16,",":17,"WHERE":18,"WHERECLAUSELIST":19,"WHERECLAUSE":20,"AND":21,"OR":22,"OP":23,"VALUE":24,"OPENGROUP":25,"CLOSEGROUP":26,"NUMBER":27,"STRING":28,"$accept":0,"$end":1},
+			terminals_: {2:"error",5:"EOF",8:"SELECT",10:"FROM",12:"ALLPROPERTIES",14:"BASICIDENTIFIER",16:"COMPLEXIDENTIFIER",17:",",18:"WHERE",21:"AND",22:"OR",23:"OP",25:"OPENGROUP",26:"CLOSEGROUP",27:"NUMBER",28:"STRING"},
+			productions_: [0,[3,2],[4,1],[4,2],[6,4],[9,1],[9,1],[11,1],[15,1],[15,1],[13,1],[13,3],[7,2],[19,1],[19,3],[19,3],[20,3],[20,3],[24,1],[24,1]],
 			performAction: function anonymous(yytext,yyleng,yylineno,yy,yystate,$$,_$) {
 
 			var $0 = $$.length - 1;
@@ -175,29 +175,35 @@ window.transformer = (function (modules) {
 			break;
 			case 6: this.$ = $$[$0]; 
 			break;
-			case 7: this.$ = [$$[$0]]; 
+			case 7: this.$ = $$[$0]; 
 			break;
-			case 8: this.$ = $$[$0-2]; $$[$0-2].push($$[$0]); 
+			case 8: this.$ = $$[$0]; 
 			break;
-			case 9: this.$ = $$[$0]; 
+			case 9: this.$ = $$[$0].replace('[', '').replace(']', ''); 
 			break;
 			case 10: this.$ = [$$[$0]]; 
 			break;
-			case 11: this.$ = $$[$0-2]; $$[$0].logicalOperator = 'AND'; $$[$0-2].push($$[$0]); 
+			case 11: this.$ = $$[$0-2]; $$[$0-2].push($$[$0]); 
 			break;
-			case 12: this.$ = $$[$0-2]; $$[$0].logicalOperator = 'OR'; $$[$0-2].push($$[$0]); 
+			case 12: this.$ = $$[$0]; 
 			break;
-			case 13: this.$ = {key: $$[$0-2], operator: $$[$0-1], value: $$[$0]}; 
+			case 13: this.$ = [$$[$0]]; 
 			break;
-			case 14: this.$ = {group: $$[$0-1]}; 
+			case 14: this.$ = $$[$0-2]; $$[$0].logicalOperator = 'AND'; $$[$0-2].push($$[$0]); 
 			break;
-			case 15: this.$ = $$[$0]; 
+			case 15: this.$ = $$[$0-2]; $$[$0].logicalOperator = 'OR'; $$[$0-2].push($$[$0]); 
 			break;
-			case 16: this.$ = $$[$0]; 
+			case 16: this.$ = {key: $$[$0-2], operator: $$[$0-1], value: $$[$0]}; 
+			break;
+			case 17: this.$ = {group: $$[$0-1]}; 
+			break;
+			case 18: this.$ = $$[$0]; 
+			break;
+			case 19: this.$ = $$[$0]; 
 			break;
 			}
 			},
-			table: [{3:1,4:2,6:3,8:[1,4]},{1:[3]},{5:[1,5]},{5:[2,2],7:6,15:[1,7]},{9:8,11:[1,11],12:[1,9],13:10},{1:[2,1]},{5:[2,3]},{11:[1,14],16:12,17:13,22:[1,15]},{10:[1,16]},{10:[2,5]},{10:[2,6],14:[1,17]},{10:[2,7],14:[2,7]},{5:[2,9],18:[1,18],19:[1,19]},{5:[2,10],18:[2,10],19:[2,10],23:[2,10]},{20:[1,20]},{11:[1,14],16:21,17:13,22:[1,15]},{11:[1,22]},{11:[1,23]},{11:[1,14],17:24,22:[1,15]},{11:[1,14],17:25,22:[1,15]},{21:26,24:[1,27],25:[1,28]},{18:[1,18],19:[1,19],23:[1,29]},{5:[2,4],15:[2,4]},{10:[2,8],14:[2,8]},{5:[2,11],18:[2,11],19:[2,11],23:[2,11]},{5:[2,12],18:[2,12],19:[2,12],23:[2,12]},{5:[2,13],18:[2,13],19:[2,13],23:[2,13]},{5:[2,15],18:[2,15],19:[2,15],23:[2,15]},{5:[2,16],18:[2,16],19:[2,16],23:[2,16]},{5:[2,14],18:[2,14],19:[2,14],23:[2,14]}],
+			table: [{3:1,4:2,6:3,8:[1,4]},{1:[3]},{5:[1,5]},{5:[2,2],7:6,18:[1,7]},{9:8,12:[1,9],13:10,14:[1,12],15:11,16:[1,13]},{1:[2,1]},{5:[2,3]},{14:[1,12],15:16,16:[1,13],19:14,20:15,25:[1,17]},{10:[1,18]},{10:[2,5]},{10:[2,6],17:[1,19]},{10:[2,10],17:[2,10]},{10:[2,8],17:[2,8],23:[2,8]},{10:[2,9],17:[2,9],23:[2,9]},{5:[2,12],21:[1,20],22:[1,21]},{5:[2,13],21:[2,13],22:[2,13],26:[2,13]},{23:[1,22]},{14:[1,12],15:16,16:[1,13],19:23,20:15,25:[1,17]},{11:24,14:[1,25]},{14:[1,12],15:26,16:[1,13]},{14:[1,12],15:16,16:[1,13],20:27,25:[1,17]},{14:[1,12],15:16,16:[1,13],20:28,25:[1,17]},{24:29,27:[1,30],28:[1,31]},{21:[1,20],22:[1,21],26:[1,32]},{5:[2,4],18:[2,4]},{5:[2,7],18:[2,7]},{10:[2,11],17:[2,11]},{5:[2,14],21:[2,14],22:[2,14],26:[2,14]},{5:[2,15],21:[2,15],22:[2,15],26:[2,15]},{5:[2,16],21:[2,16],22:[2,16],26:[2,16]},{5:[2,18],21:[2,18],22:[2,18],26:[2,18]},{5:[2,19],21:[2,19],22:[2,19],26:[2,19]},{5:[2,17],21:[2,17],22:[2,17],26:[2,17]}],
 			defaultActions: {5:[2,1],6:[2,3],9:[2,5]},
 			parseError: function parseError(str, hash) {
 			    throw new Error(str);
@@ -483,38 +489,42 @@ window.transformer = (function (modules) {
 			break;
 			case 1:return 8
 			break;
-			case 2:return 15
+			case 2:return 18
 			break;
 			case 3:return 10
 			break;
-			case 4:return 18
+			case 4:return 21
 			break;
-			case 5:return 19
+			case 5:return 22
 			break;
-			case 6:return 22
+			case 6:return 25
 			break;
-			case 7:return 23
+			case 7:return 26
 			break;
 			case 8:return 12
 			break;
-			case 9:return 14
+			case 9:return 17
 			break;
-			case 10:return 11
+			case 10:return '.'
 			break;
-			case 11:return 24
+			case 11:return 14
 			break;
-			case 12:return 25
+			case 12:return 16
 			break;
-			case 13:return 25
+			case 13:return 27
 			break;
-			case 14:return 20
+			case 14:return 28
 			break;
-			case 15:return 5
+			case 15:return 28
+			break;
+			case 16:return 23
+			break;
+			case 17:return 5
 			break;
 			}
 			};
-			lexer.rules = [/^(?:\s+)/,/^(?:[Ss][Ee][Ll][Ee][Cc][Tt])/,/^(?:[Ww][Hh][Ee][Rr][Ee])/,/^(?:[Ff][Rr][Oo][Mm])/,/^(?:[Aa][Nn][Dd])/,/^(?:[Oo][Rr])/,/^(?:\()/,/^(?:\))/,/^(?:\*)/,/^(?:,)/,/^(?:[a-zA-Z_-]+)/,/^(?:\d+)/,/^(?:['].*?['])/,/^(?:["].*?["])/,/^(?:[><=])/,/^(?:$)/];
-			lexer.conditions = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],"inclusive":true}};
+			lexer.rules = [/^(?:\s+)/,/^(?:[Ss][Ee][Ll][Ee][Cc][Tt])/,/^(?:[Ww][Hh][Ee][Rr][Ee])/,/^(?:[Ff][Rr][Oo][Mm])/,/^(?:[Aa][Nn][Dd])/,/^(?:[Oo][Rr])/,/^(?:\()/,/^(?:\))/,/^(?:\*)/,/^(?:,)/,/^(?:\.)/,/^(?:[a-zA-Z_-]+)/,/^(?:\[[.,a-zA-Z_-]+\])/,/^(?:\d+)/,/^(?:['].*?['])/,/^(?:["].*?["])/,/^(?:[><=])/,/^(?:$)/];
+			lexer.conditions = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],"inclusive":true}};
 			return lexer;})()
 			parser.lexer = lexer;
 			function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Parser;
