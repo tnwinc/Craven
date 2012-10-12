@@ -27,12 +27,17 @@ describe 'Transforming SQL-like statements into HTTP requests', ->
       describe 'single, string where clause', ->
         it 'should build the right query', ->
           request = transformer.transform("SELECT * FROM People WHERE Name = 'Bill'", 'http://ravendb')
-          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:\'Bill\''
+          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:"Bill"'
+
+      describe 'single, string where clause using double quotes', ->
+        it 'should build the right query', ->
+          request = transformer.transform('SELECT * FROM People WHERE Name = "Bill"', 'http://ravendb')
+          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:"Bill"'
 
       describe 'multiple where clauses joined by And', ->
         it 'should build the right query', ->
           request = transformer.transform("SELECT * FROM People WHERE Name = 'Bill' AND Id = 20", 'http://ravendb')
-          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:\'Bill\' AND Id:20'
+          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:"Bill" AND Id:20'
 
     describe 'with a database selected', ->
       it 'should insert the build the right query', ->

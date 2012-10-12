@@ -1,4 +1,5 @@
 parser = require('parser').parser
+singleQuotedStringPattern = /^'(.*)'$/
 
 urlRegex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
 
@@ -22,7 +23,9 @@ exports.transform = (sql, ravenUrl, database, index)->
 
     if statement.filters?.length
       filters = []
-      filters.push "#{filter.key}:#{filter.value}" for filter in statement.filters
+      for filter in statement.filters
+        filter.value = if filter.value?.match? singleQuotedStringPattern then filter.value.replace singleQuotedStringPattern, '"$1"' else filter.value
+        filters.push "#{filter.key}:#{filter.value}"
       params.push "query=#{filters.join ' AND '}"
 
     if statement.properties?.length
