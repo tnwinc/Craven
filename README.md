@@ -1,11 +1,15 @@
 Craven
 ======
-
-A web interface which provides a way to translate simple SQL statements into Raven HTTP API calls over curl.
-
 http://labs.tnwinc.com/Craven
 
-So far, only pretty basic SQL Select statements are supported. Examples of the supported statements are below.
+A web interface which provides a way to translate simple SQL-like
+statements into Raven HTTP API calls over curl.
+
+**The SQL-like language is not really SQL**. There are some tweaks that are
+needed in order to allow the query to refer to a rich data structure as
+opposed to a flat row structure.
+
+So far, only pretty basic SQL-like Select statements are supported. Examples of the supported statements are below.
 
 ```
 // Selecting entire documents from a collection
