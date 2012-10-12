@@ -1,0 +1,11 @@
+{
+  "name": "Craven",
+  "version": "0.0.1",
+  "description": "A learning tool to help port your SQL knowledge to the Raven API URL",
+  "author": "The Network",
+  "dependencies": {
+    "chai": "1.x.x",
+    "mocha": "1.x.x",
+    "webmake": "0.x.x"
+  }
+}
