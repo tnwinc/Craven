@@ -74,14 +74,16 @@ window.transformer = (function (modules) {
 		"transformer": {
 			"transformer.js": function (exports, module, require) {
 				(function() {
-				  var parser, urlRegex;
+				  var parser, singleQuotedStringPattern, urlRegex;
 
 				  parser = require('parser').parser;
+
+				  singleQuotedStringPattern = /^'(.*)'$/;
 
 				  urlRegex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
 				  exports.transform = function(sql, ravenUrl, database, index) {
-				    var filter, filters, params, property, request, statement, _i, _j, _len, _len2, _ref, _ref2, _ref3, _ref4;
+				    var filter, filters, params, property, request, statement, _i, _j, _len, _len2, _ref, _ref2, _ref3, _ref4, _ref5;
 				    if (!(ravenUrl != null ? ravenUrl.length : void 0)) {
 				      throw Error('ravenUrl must be defined');
 				    }
@@ -99,14 +101,15 @@ window.transformer = (function (modules) {
 				        _ref2 = statement.filters;
 				        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
 				          filter = _ref2[_i];
+				          filter.value = ((_ref3 = filter.value) != null ? typeof _ref3.match === "function" ? _ref3.match(singleQuotedStringPattern) : void 0 : void 0) ? filter.value.replace(singleQuotedStringPattern, '"$1"') : filter.value;
 				          filters.push("" + filter.key + ":" + filter.value);
 				        }
 				        params.push("query=" + (filters.join(' AND ')));
 				      }
-				      if ((_ref3 = statement.properties) != null ? _ref3.length : void 0) {
-				        _ref4 = statement.properties;
-				        for (_j = 0, _len2 = _ref4.length; _j < _len2; _j++) {
-				          property = _ref4[_j];
+				      if ((_ref4 = statement.properties) != null ? _ref4.length : void 0) {
+				        _ref5 = statement.properties;
+				        for (_j = 0, _len2 = _ref5.length; _j < _len2; _j++) {
+				          property = _ref5[_j];
 				          params.push("fetch=" + property);
 				        }
 				      }
@@ -481,14 +484,16 @@ window.transformer = (function (modules) {
 			break;
 			case 9:return 22
 			break;
-			case 10:return 19
+			case 10:return 22
 			break;
-			case 11:return 5
+			case 11:return 19
+			break;
+			case 12:return 5
 			break;
 			}
 			};
-			lexer.rules = [/^(?:\s+)/,/^(?:[Ss][Ee][Ll][Ee][Cc][Tt])/,/^(?:[Ww][Hh][Ee][Rr][Ee])/,/^(?:[Ff][Rr][Oo][Mm])/,/^(?:[Aa][Nn][Dd])/,/^(?:\*)/,/^(?:,)/,/^(?:[a-zA-Z_-]+)/,/^(?:\d+)/,/^(?:['].*?['])/,/^(?:[><=])/,/^(?:$)/];
-			lexer.conditions = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11],"inclusive":true}};
+			lexer.rules = [/^(?:\s+)/,/^(?:[Ss][Ee][Ll][Ee][Cc][Tt])/,/^(?:[Ww][Hh][Ee][Rr][Ee])/,/^(?:[Ff][Rr][Oo][Mm])/,/^(?:[Aa][Nn][Dd])/,/^(?:\*)/,/^(?:,)/,/^(?:[a-zA-Z_-]+)/,/^(?:\d+)/,/^(?:['].*?['])/,/^(?:["].*?["])/,/^(?:[><=])/,/^(?:$)/];
+			lexer.conditions = {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12],"inclusive":true}};
 			return lexer;})()
 			parser.lexer = lexer;
 			function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Parser;
