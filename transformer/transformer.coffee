@@ -3,6 +3,18 @@ singleQuotedStringPattern = /^'(.*)'$/
 
 urlRegex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
 
+processFilters = (filters)->
+  stack = []
+  for filter in filters
+    if filter.group
+      logicalOperator = if filter.logicalOperator then "#{filter.logicalOperator} " else ''
+      stack.push "#{logicalOperator}(#{processFilters filter.group})"
+    else
+      filter.value = if filter.value?.match? singleQuotedStringPattern then filter.value.replace singleQuotedStringPattern, '"$1"' else filter.value
+      logicalOperator = if filter.logicalOperator then "#{filter.logicalOperator} " else ''
+      stack.push "#{logicalOperator}#{filter.key}:#{filter.value}"
+  return stack.join ' '
+
 exports.transform = (sql, ravenUrl, database, index)->
 
   throw Error 'ravenUrl must be defined' unless ravenUrl?.length
@@ -22,12 +34,7 @@ exports.transform = (sql, ravenUrl, database, index)->
     request.url = "#{ravenUrl}/#{database}indexes/dynamic/#{statement.collection}"
     params = []
     if statement.filters?.length
-      filters = []
-      for filter in statement.filters
-        filter.value = if filter.value?.match? singleQuotedStringPattern then filter.value.replace singleQuotedStringPattern, '"$1"' else filter.value
-        logicalOperator = if filter.logicalOperator then "#{filter.logicalOperator} " else ''
-        filters.push "#{logicalOperator}#{filter.key}:#{filter.value}"
-      params.push "query=#{filters.join ' '}"
+      params.push "query=#{processFilters statement.filters}"
 
     if statement.properties?.length
       params.push "fetch=#{property}" for property in statement.properties

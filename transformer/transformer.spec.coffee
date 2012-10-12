@@ -48,6 +48,17 @@ describe 'Transforming SQL-like statements into HTTP requests', ->
           request = transformer.transform("SELECT * FROM People WHERE Name = 'Bill' OR Id = 20", 'http://ravendb')
           (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=Name:"Bill" OR Id:20'
 
+      describe 'grouped where clause', ->
+        it 'should handle a single simple group', ->
+          request = transformer.transform("SELECT * FROM People WHERE (Name = 'Bill' OR Name= 'Mary') AND Age = 20", 'http://ravendb')
+          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=(Name:"Bill" OR Name:"Mary") AND Age:20'
+
+        it 'should handle a more complex grouping', ->
+          request = transformer.transform("SELECT * FROM People WHERE C=5 AND ((A=2 OR A=3) AND (B=4 OR B=5))", 'http://ravendb')
+          (expect request.url).to.equal 'http://ravendb/indexes/dynamic/People?query=C:5 AND ((A:2 OR A:3) AND (B:4 OR B:5))'
+
+
+
     describe 'with a database selected', ->
       it 'should insert the build the right query', ->
         request = transformer.transform("SELECT * FROM People", 'http://ravendb/', 'db1')

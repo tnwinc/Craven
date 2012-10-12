@@ -50,6 +50,8 @@ WHERECLAUSELIST
 WHERECLAUSE
   : IDENTIFIER OP VALUE
     { $$ = {key: $1, operator: $2, value: $3}; }
+  | OPENGROUP WHERECLAUSELIST CLOSEGROUP
+    { $$ = {group: $2}; }
   ;
 
 VALUE

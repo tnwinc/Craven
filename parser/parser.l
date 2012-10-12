@@ -6,6 +6,8 @@
 [Ff][Rr][Oo][Mm]              return 'FROM'
 [Aa][Nn][Dd]                  return 'AND'
 [Oo][Rr]                      return 'OR'
+"("            return 'OPENGROUP'
+")"            return 'CLOSEGROUP'
 "*"            return 'ALLPROPERTIES'
 ","            return ','
 [a-zA-Z_-]+    return 'IDENTIFIER'
