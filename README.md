@@ -27,3 +27,5 @@ SELECT Id,Name,Dob FROM SomeCollection WHERE SomeField="some_val"
 SELECT Id,[Parent.Id],Dob FROM SomeCollection WHERE [Nested.Property]="some_val"
 SELECT Id,[List,Property],Dob FROM SomeCollection WHERE [List,AnotherProperty]="some_val"
 ```
+
+Licensed under the MIT License. See the LICENSE file for details.
